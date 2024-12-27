@@ -84,7 +84,8 @@ jobs:
       #     POSTFIX: ${{ steps.template-postfix.outputs.postfix }}
 
       - name: Build PROS Project
-        run: make clean quick -j
+        run: pros make all
+        # run: make clean quick -j
 
       - name: Create template
         run: pros make template
