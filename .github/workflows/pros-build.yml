@@ -122,5 +122,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: my-library
-          path: "template/*"
+          path: "*@*.zip"
           retention-days: 89
