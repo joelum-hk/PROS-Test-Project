@@ -18,8 +18,9 @@ jobs:
         id: build-type
         run: |
           # Using tee to write to the output file and stdout
+          echo "GITHUB_REF: $GITHUB_REF"
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            echo "type=release" | tee -a $GITHUB_OUTPUT
+            echo "type=tag" | tee -a $GITHUB_OUTPUT
             echo "version=${GITHUB_REF#refs/tags/v}" | tee -a $GITHUB_OUTPUT
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
             echo "type=pr" | tee -a $GITHUB_OUTPUT
