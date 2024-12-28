@@ -17,20 +17,23 @@ jobs:
       - name: Determine build type
         id: build-type
         run: |
+          # Using tee to write to the output file and stdout
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            echo "type=release" >> $GITHUB_OUTPUT
-            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+            echo "type=release" | tee -a $GITHUB_OUTPUT
+            echo "version=${GITHUB_REF#refs/tags/v}" | tee -a $GITHUB_OUTPUT
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            echo "type=pr" >> $GITHUB_OUTPUT
-            echo "pr_num=${GITHUB_REF#refs/pull/}" >> $GITHUB_OUTPUT
-            echo "pr_num=${pr_num%/merge}" >> $GITHUB_OUTPUT
+            echo "type=pr" | tee -a $GITHUB_OUTPUT
+            echo "pr_num=${GITHUB_REF#refs/pull/}" | tee -a $GITHUB_OUTPUT
+            echo "pr_num=${pr_num%/merge}" | tee -a $GITHUB_OUTPUT
           else
-            echo "type=push" >> $GITHUB_OUTPUT
+            echo "type=push" | tee -a $GITHUB_OUTPUT
           fi
+
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
 
       - name: Read project makefile
         id: read-makefile
         run: |
           echo "version_core=$(awk -F'=' '/^VERSION:=/{print $2}' Makefile)" >> $GITHUB_OUTPUT
           echo "library_name=$(awk -F'=' '/^LIBNAME:=/{print $2}' Makefile)" >> $GITHUB_OUTPUT
-
